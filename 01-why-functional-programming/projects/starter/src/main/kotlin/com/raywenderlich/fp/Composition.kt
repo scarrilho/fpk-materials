@@ -28,3 +28,18 @@
  *
  */
 package com.raywenderlich.fp
+
+fun double(x: Int): Int = 2 * x
+
+fun square(x: Int): Int = x * x
+
+fun squareAndDouble(x: Int): Int = double(square(x))
+
+infix fun <A, B, C> ((A)->B).compose(
+    g: (B) -> C): (A) -> C = { a -> g(this(a)) }
+fun main() {
+    //val result = double(square(10))
+    //println(result)
+    val squareAndDouble = ::square compose ::double
+   println(squareAndDouble(10))
+}
