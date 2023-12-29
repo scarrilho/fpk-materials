@@ -28,3 +28,39 @@
  *
  */
 package com.raywenderlich.fp
+
+
+// Input
+val input = listOf("123", "abc", "1ds", "987", "abdf", "1d3", "de1", "88", "101")
+
+/** Imperative approach */
+fun imperativeSum(list: List<String>): Int {
+    var sum = 0
+    for (item in input) {
+        try {
+            sum += item.toInt()
+        } catch (nfe: NumberFormatException) {
+            // Skip
+        }
+    }
+    return sum
+}
+
+fun isValidNumber(str: String): Boolean =
+    try {
+        str.toInt()
+        true
+    } catch (nfe: NumberFormatException) {
+        false
+    }
+
+/** Declarative approach */
+fun declarativeSum(list: List<String>): Int = list
+    .filter(::isValidNumber)
+    .map(String::toInt)
+    .sum()
+
+fun main() {
+    println("Sum ${imperativeSum(input)}")
+    println("Sum ${declarativeSum(input)}")
+}
