@@ -28,3 +28,14 @@
  *
  */
 package com.raywenderlich.fp
+
+import kotlin.system.measureTimeMillis
+
+fun main() {
+    3.times {
+        println("Hello")
+    }
+}
+
+fun Int.times(fn: () -> Unit) =
+    (1..this).forEach { _ -> fn() }
