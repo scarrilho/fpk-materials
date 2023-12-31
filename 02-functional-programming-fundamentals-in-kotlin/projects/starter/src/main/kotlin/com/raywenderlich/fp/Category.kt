@@ -28,3 +28,6 @@
  * THE SOFTWARE.
  */
 package com.raywenderlich.fp
+
+inline infix fun <A, B, C> Fun<B, C>.after(crossinline f: Fun<A, B> ): Fun<A, C> =
+    { a:A -> this(f(a))}

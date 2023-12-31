@@ -28,3 +28,14 @@
  * THE SOFTWARE.
  */
 package com.raywenderlich.fp
+
+fun twice(a: Int): Int = a * 2
+
+fun format(b: Int): String = "Result is $b"
+
+fun formatAfterTwice(a: Int) = format(twice(a))
+
+fun main() {
+    println(format(twice(37)))
+    println(formatAfterTwice(37))
+}

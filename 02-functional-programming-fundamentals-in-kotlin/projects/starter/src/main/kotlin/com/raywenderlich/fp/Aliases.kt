@@ -28,3 +28,5 @@
  * THE SOFTWARE.
  */
 package com.raywenderlich.fp
+
+typealias Fun<A, B> = (A) -> B
