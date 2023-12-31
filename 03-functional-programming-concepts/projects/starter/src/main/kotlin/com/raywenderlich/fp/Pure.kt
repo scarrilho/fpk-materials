@@ -35,3 +35,10 @@ fun negate(x: Int) = -x
 fun identity(x: Int) = x
 
 fun abs(x: Int) = if (x < 0) negate(x) else identity(x)
+
+var sharedCount = 1
+fun comp1(x: Int): String = "Hello ${x + sharedCount}"
+fun comp2(x: String): Int = x.length - sharedCount
+
+val comp2AfterComp1 = ::comp2 after ::comp1
+
