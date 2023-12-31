@@ -29,10 +29,11 @@
 
 package com.raywenderlich.fp
 
-var count = 0
+
 
 // Impure
 /*
+var count = 0
 fun countedAbs(x: Int): Int {
     count++
     return abs(x)

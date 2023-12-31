@@ -1,9 +1,9 @@
 package com.raywenderlich.fp
 
-import com.raywenderlich.fp.util.invokeTimes
-import org.junit.Assert.*
-import org.junit.Test
 import com.google.common.truth.Truth.assertThat
+import com.raywenderlich.fp.util.invokeTimes
+import org.junit.Test
+
 class CounterKtTest {
     @Test
     fun test100Times() {
