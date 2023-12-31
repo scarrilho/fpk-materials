@@ -29,6 +29,8 @@
  */
 package com.raywenderlich.fp
 
+import com.raywenderlich.fp.exercises.compose
+
 fun twice(a: Int): Int = a * 2
 
 fun format(b: Int): String = "Result is $b"
@@ -36,6 +38,15 @@ fun format(b: Int): String = "Result is $b"
 fun formatAfterTwice(a: Int) = format(twice(a))
 
 fun main() {
-    println(format(twice(37)))
-    println(formatAfterTwice(37))
+    /*println(format(twice(37)))
+    println(formatAfterTwice(37))*/
+    val f: Fun<Int, Int> = ::twice
+    val g: Fun<Int, String> = ::format
+    val formatTwice = g after f
+    println(formatTwice)
+    println(formatTwice(37))
+
+    val composeFormatTwice = f compose g
+    println(composeFormatTwice(37))
+
 }
