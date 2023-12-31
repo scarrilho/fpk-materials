@@ -28,3 +28,10 @@
  */
 
 package com.raywenderlich.fp
+
+// fun abs(x: Int) = if (x < 0) -x else x
+
+fun negate(x: Int) = -x
+fun identity(x: Int) = x
+
+fun abs(x: Int) = if (x < 0) negate(x) else identity(x)

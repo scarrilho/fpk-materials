@@ -28,3 +28,16 @@
  */
 
 package com.raywenderlich.fp
+
+var count = 0
+
+// Impure
+/*
+fun countedAbs(x: Int): Int {
+    count++
+    return abs(x)
+}
+*/
+
+fun countedAbs(count: Int, a: Int): Pair<Int, Int > =
+    abs(a) to count + 1
