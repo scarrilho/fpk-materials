@@ -37,16 +37,25 @@ fun format(b: Int): String = "Result is $b"
 
 fun formatAfterTwice(a: Int) = format(twice(a))
 
+fun lenght(s: String): Int = s.length
+
 fun main() {
-    /*println(format(twice(37)))
-    println(formatAfterTwice(37))*/
+    println(format(twice(37)))
+    println(formatAfterTwice(37))
+
     val f: Fun<Int, Int> = ::twice
     val g: Fun<Int, String> = ::format
+
     val formatTwice = g after f
+/*
     println(formatTwice)
     println(formatTwice(37))
 
     val composeFormatTwice = f compose g
-    println(composeFormatTwice(37))
+    println(composeFormatTwice(37))*/
 
+    val h: Fun<String, Int> = ::lenght
+    val leftSide: Fun<Int, Int> = (h after g) after f
+    val rightSide: Fun<Int, Int> = h after (g after f)
+    println(leftSide(37) == rightSide(37))
 }
