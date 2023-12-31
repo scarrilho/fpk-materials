@@ -60,4 +60,13 @@ fun main() {
     val leftSide: Fun<Int, Int> = (h after g) after f
     val rightSide: Fun<Int, Int> = h after (g after f)
     println(leftSide(37) == rightSide(37))
+
+    //absurd<Int>(TODO())
+    println(unit<Int>(1))
+
+    fun one(u: Unit): Int = 1
+    fun two(u: Unit): Int = 2
+    fun minusThree(u: Unit): Int = -3
+    val twiceTwo = ::twice after ::two
+    println(twiceTwo(Unit))
 }

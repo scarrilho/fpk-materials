@@ -33,3 +33,7 @@ inline infix fun <A, B, C> Fun<B, C>.after(crossinline f: Fun<A, B> ): Fun<A, C>
     { a:A -> this(f(a))}
 
 fun <A> identity(value: A) = value
+
+fun <A> absurd(a: Nothing): A = a as A
+
+fun <A> unit(a: A): Unit = Unit
