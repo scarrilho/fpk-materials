@@ -39,6 +39,8 @@ fun formatAfterTwice(a: Int) = format(twice(a))
 
 fun lenght(s: String): Int = s.length
 
+fun half(a: Int): Int = a / 2
+
 fun main() {
     println(format(twice(37)))
     println(formatAfterTwice(37))
