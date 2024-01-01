@@ -30,7 +30,6 @@
 package com.raywenderlich.fp
 
 import com.raywenderlich.fp.util.assertOrThrow
-import kotlin.math.exp
 
 fun main() {
     // Referentially transparent
@@ -43,12 +42,20 @@ fun main() {
     }
 
     // Referentially opaque
-    var count = 1
+/*    var count = 1
     val expr2 = { 3 * 10 * ++count }
     val (b1, b2) = expr2() to expr2()
     val expr2Eval = expr2()
     val (b1Eval , b2Eval) = expr2Eval to expr2Eval
     assertOrThrow("expr2 is not RT") {
         b1 == b1Eval && b2 == b2Eval
+    }*/
+
+    val expr3 = { println("Hello world!") }
+    val (c1, c2) = expr3() to expr3()
+    val expr3Eval = expr3()
+    val (c1Eval, c2Eval) = expr3Eval to expr3Eval
+    assertOrThrow("Expr4 is not RT") {
+        c1 == c1Eval && c2 == c2Eval
     }
 }

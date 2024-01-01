@@ -28,3 +28,17 @@
  */
 
 package com.raywenderlich.fp
+
+import com.raywenderlich.fp.util.assertOrThrow
+
+inline fun cube(x: Int): Int = x * x * x
+
+inline fun doubleCube(x: Int) = cube(x) + cube(x)
+
+// doubleCube(2) = cube(2) + cube(2) == (2 * 2 * 2) +  (2 * 2 * 2) == 8 + 8 == 16
+
+fun main() {
+    assertOrThrow("") {
+        doubleCube(2) == 16
+    }
+}
