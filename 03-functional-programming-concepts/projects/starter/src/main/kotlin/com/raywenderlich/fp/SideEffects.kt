@@ -29,3 +29,18 @@
 
 package com.raywenderlich.fp
 
+import com.raywenderlich.fp.util.assertOrThrow
+
+fun shiftLeft(x: Int) = x shl 1
+
+fun not(x: Int) = x.inv()
+
+val shiftLeftAndNot = ::not after ::shiftLeft
+
+fun main() {
+    val comp1 = not(shiftLeft(10))
+    val comp2 = shiftLeftAndNot(10)
+    assertOrThrow("com1 != comp2") {
+        comp1 == comp2
+    }
+}

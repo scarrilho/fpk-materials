@@ -28,3 +28,19 @@
  */
 
 package com.raywenderlich.fp
+
+fun <A, B> Fun<A, B>.liftW(log: (A, B) -> String): Writer<A, B> =
+    { a: A ->
+        val b = this(a)
+        b to log(a, b)
+    }
+
+fun main() {
+    val shiftLeftAndLog = ::shiftLeft.liftW { a, _ ->
+        "Shift left $a"
+    }
+    val notAndLog = ::not.liftW { a, _ -> "Negate $a"}
+
+    val shiftLeftAndNotAndLog = notAndLog after shiftLeftAndLog
+    println(shiftLeftAndNotAndLog(10).second)
+}
