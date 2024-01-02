@@ -30,3 +30,18 @@
 package com.raywenderlich.fp
 
 val empty = {}
+
+val operation = { a: Int, b: Int -> a + b }
+
+val testLambda = { a: Int ->
+    val doubleA = a * 2
+    if (doubleA > 10) "$doubleA is Greater than 10"
+    else "$doubleA is Smaller or Equal to 10"
+}
+
+fun main() {
+    // val result = operation(3, 4)
+    val result = operation.invoke(3, 4)
+    println(result)
+    println(testLambda(5))
+}

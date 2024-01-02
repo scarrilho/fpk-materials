@@ -29,3 +29,12 @@
 
 package com.raywenderlich.fp
 
+fun main() {
+    val inputValue = 30
+    val greater10 = { greaterThan10(inputValue) }
+    if (inputValue > 4 && greater10()) {
+        println("OK")
+    } else {
+        println("KO")
+    }
+}
