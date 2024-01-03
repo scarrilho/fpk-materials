@@ -29,3 +29,17 @@
 
 package com.raywenderlich.fp
 
+// fun Int.times(fn: (Int) -> Unit) = (1..this).forEach(fn)
+
+fun Int.times(fn: (Int) -> Unit) {
+    var i = 1
+    while (i <= this) {
+        fn(i++)
+    }
+}
+
+fun main() {
+    10.times {
+        println(" $it")
+    }
+}
