@@ -29,3 +29,35 @@
 
 package com.raywenderlich.fp
 
+fun bubbleSort(values: IntArray) {
+    for (i in values.size - 1 downTo 0) {
+        for (j in 0 until i) {
+            if (values[j] > values[j + 1]) {
+                swap(values, j, j + 1)
+            }
+        }
+    }
+}
+
+fun <T> bubbleSort(
+    values: Array<T>,
+    isLarger: (T, T) -> Boolean
+) {
+    for (i in values.size - 1 downTo 0) {
+        for (j in 0 until i) {
+            if (isLarger(values[j], values[j + 1])) {
+                swap(values, j, j + 1)
+            }
+        }
+    }
+}
+
+fun main() {
+    //val array = intArrayOf(10, 5, 2, 7, 8, 3)
+    // bubbleSort(array)
+    val array = arrayOf(10, 5, 2, 7, 8, 3)
+    bubbleSort(array) { first, second ->
+        first > second
+    }
+    array.printAll()
+}
