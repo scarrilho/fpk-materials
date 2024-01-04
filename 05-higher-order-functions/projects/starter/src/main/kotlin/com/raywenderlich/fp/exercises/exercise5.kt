@@ -31,4 +31,8 @@ fun main() {
     listOf(1, 2, 3, 4, 4, 5, 6, 7, 8, 8)
         .filter { fourPredicate.accept(it) }
         .forEach(::println)
+
+    listOf(1, 2, 3, 4, 4, 5, 6, 7, 8, 8)
+        .filter(fourPredicate::accept)
+        .forEach(::println)
 }
