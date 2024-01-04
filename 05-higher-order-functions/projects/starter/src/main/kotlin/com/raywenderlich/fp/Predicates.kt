@@ -29,8 +29,6 @@
 
 package com.raywenderlich.fp
 
-import javax.print.attribute.standard.MediaSize.Other
-
 fun interface Predicate1<T> {
     fun accept(value: T): Boolean
 }
