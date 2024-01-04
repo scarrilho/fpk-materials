@@ -1,38 +1,21 @@
 package com.raywenderlich.fp.exercises
 
-import com.raywenderlich.fp.ISinglePredicate
+import com.raywenderlich.fp.*
 
-fun <T> T.isEqualsPredicate(): (T) -> Boolean =
-    { value: T -> this == value}
-
-fun interface SinglePredicate<T> {
-    fun accept(other: T): Boolean
+val isValidEmail = Predicate1<String> {
+    EMAIL_REG_EX.matches(it)
 }
 
-fun <T> T.isEqualsIPredicate(): SinglePredicate<T> =
-    SinglePredicate { value: T -> this == value }
+fun isLongerThan(length: Int): Predicate1<String> =
+    Predicate1 {
+        value -> value.length > length
+    }
 
 fun main() {
-    listOf(1, 2, 3, 4, 4, 5, 6, 7, 8, 8)
-        .filter(4.isEqualsPredicate())
-        .forEach(::println)
+    val predicate = isValidEmail and isLongerThan(10)
 
-    listOf("Helllo", "Helo", "Hello")
-        .filter("Hello".isEqualsPredicate())
-        .forEach(::println)
-
-
-    listOf(1, 2, 3, 4, 4, 5, 6, 7, 8, 8)
-        .filter { it.isEqualsIPredicate().accept(4) }
-        .forEach(::println)
-
-    val fourPredicate: SinglePredicate<Int> = 4.isEqualsIPredicate()
-
-    listOf(1, 2, 3, 4, 4, 5, 6, 7, 8, 8)
-        .filter { fourPredicate.accept(it) }
-        .forEach(::println)
-
-    listOf(1, 2, 3, 4, 4, 5, 6, 7, 8, 8)
-        .filter(fourPredicate::accept)
+    emails
+        .filterWithPredicate(predicate)
+        .take(5)
         .forEach(::println)
 }
