@@ -28,3 +28,20 @@
  */
 
 package com.raywenderlich.fp
+
+fun <T> FList<T>.forEach(fn: (T) -> Unit): Unit = match(
+    whenNil = {},
+    whenCons = { head, tail ->
+        fn(head)
+        tail.forEach(fn)
+    }
+)
+
+fun main() {
+    listOf(1, 2, 4).forEach {
+        println(it)
+    }
+    FList.of(1, 2, 3).forEach {
+        println(it)
+    }
+}
