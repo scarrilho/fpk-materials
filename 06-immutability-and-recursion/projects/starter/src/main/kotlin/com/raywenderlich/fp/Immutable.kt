@@ -48,7 +48,7 @@ data class WrongImmutableUser(
 data class WrongImmutableUser(
     val id: Int,
     val username: String,
-    val _dob: java.util.Date = Date()
+    val _dob: Date = Date()
 ) {
     val dob: Date
         get() = Date().apply {
