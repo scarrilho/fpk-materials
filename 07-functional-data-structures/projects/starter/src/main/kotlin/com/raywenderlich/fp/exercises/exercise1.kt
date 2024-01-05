@@ -1,4 +1,7 @@
-package com.raywenderlich.fp
+package com.raywenderlich.fp.exercises
+
+import com.raywenderlich.fp.FList
+import com.raywenderlich.fp.match
 
 /*fun <T> FList<T>.isEmpty(): Boolean =
     when (this) {
