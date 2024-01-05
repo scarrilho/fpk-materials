@@ -48,6 +48,11 @@ tailrec fun tailRecFactorial(n: Int, fact: Int = 1): Int = when (n) {
     else -> tailRecFactorial(n - 1, n * fact)
 }
 
+fun noTailRecFactorial(n: Int, fact: Int = 1): Int = when (n) {
+    1 -> fact
+    else -> noTailRecFactorial(n - 1, n * fact)
+}
+
 fun main() {
     println(imperativeFactorial(10))
     println(recursiveFactorial(10))
