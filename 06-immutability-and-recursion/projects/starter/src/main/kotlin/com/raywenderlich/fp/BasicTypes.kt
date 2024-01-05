@@ -29,3 +29,11 @@
  */
 
 package com.raywenderlich.fp
+
+fun main() {
+    val a: Int? = 200
+    val b: Int? = 200
+    println("Equals ${a == b}")
+    println("Same ${a === b}")
+    val test = StringBuffer()
+}
