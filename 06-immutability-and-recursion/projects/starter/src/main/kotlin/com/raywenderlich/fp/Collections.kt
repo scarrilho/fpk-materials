@@ -29,3 +29,10 @@
  */
 
 package com.raywenderlich.fp
+
+fun main() {
+    val immutableList = listOf(1, 2, 3, 4, 5)
+    val asMutableList = immutableList as MutableList<Int>
+    asMutableList.add(10)
+    // immutableList.add(10) // ERROR
+}

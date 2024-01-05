@@ -29,3 +29,14 @@
  */
 
 package com.raywenderlich.fp
+
+fun changeUsername(user: MutableUser) {
+    // user = MutableUser(2, "Alice") // ERROR
+    user.username = "Alice"
+}
+
+fun main() {
+    val constantUser = MutableUser(1, "Max")
+    // constantUser = MutableUser(2, "Alice") // ERROR
+    constantUser.username = "Alice"
+}

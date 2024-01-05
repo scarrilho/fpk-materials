@@ -29,3 +29,46 @@
  */
 
 package com.raywenderlich.fp
+
+import java.util.*
+
+data class User(
+    val id: Int,
+    val username: String
+)
+
+/*
+data class WrongImmutableUser(
+    val id: Int,
+    val username: String,
+    val dob: java.util.Date = Date()
+)
+*/
+
+data class WrongImmutableUser(
+    val id: Int,
+    val username: String,
+    val _dob: java.util.Date = Date()
+) {
+    val dob: Date
+        get() = Date().apply {
+            time = _dob.time
+        }
+}
+
+data class MutableUser(
+    val id: Int,
+    var username: String
+)
+
+fun main() {
+    val w = WrongImmutableUser(1, "maxcarli")
+    println(w)
+    w.dob.time = 1000L
+    println(w)
+
+    val mutableUser = MutableUser(8, "maxcarli")
+    println(mutableUser)
+    mutableUser.username = "massimo"
+    println(mutableUser)
+}
