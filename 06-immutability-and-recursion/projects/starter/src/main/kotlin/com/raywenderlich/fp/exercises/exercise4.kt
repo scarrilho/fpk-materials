@@ -3,7 +3,6 @@ package com.raywenderlich.fp.exercises
 import com.raywenderlich.fp.noTailRecFactorial
 import com.raywenderlich.fp.recursiveFactorial
 import com.raywenderlich.fp.tailRecFactorial
-import java.sql.Time
 
 fun chrono(times: Int = 1, fn: () -> Unit): Long {
     val start = System.nanoTime()
