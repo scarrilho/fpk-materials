@@ -28,3 +28,26 @@
  */
 
 package com.raywenderlich.fp
+
+typealias Predicate<T> = (T) -> Boolean
+
+fun <T> FList<T>.filter(predicate: Predicate<T>): FList<T> = match(
+    whenNil = { FList.empty() },
+    whenCons = { head, tail ->
+        if (predicate(head)) {
+            FCons(head, tail.filter(predicate))
+        } else {
+            tail.filter(predicate)
+        }
+    }
+)
+
+
+fun main() {
+    val predicate: Predicate<Int> = { value -> value % 3 == 0 }
+
+    FList.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
+        .filter { it % 3 == 0 }
+//        .filter(predicate)
+        .forEach(::println)
+}
