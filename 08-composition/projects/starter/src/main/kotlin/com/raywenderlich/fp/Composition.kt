@@ -44,3 +44,13 @@ inline infix fun <A, B, C> Fun<A, B>.compose(crossinline g: Fun<B, C>): Fun<A, C
   { a: A ->
     g(this(a))
   }
+
+fun main() {
+  val double = { a: Int -> a * 2 }
+  val square = { a: Int -> a * a }
+  val stringify = Int::toString
+  val stringifyDoubleSquareAfter = stringify after square after double
+  val stringifyDoubleSquareCompose = double compose square compose stringify
+  println(stringifyDoubleSquareAfter(2))
+  println(stringifyDoubleSquareCompose(2))
+}
