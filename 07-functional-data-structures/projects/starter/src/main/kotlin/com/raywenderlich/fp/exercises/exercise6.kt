@@ -18,4 +18,10 @@ fun main() {
     FList.empty<Int>()
         .take(3)
         .forEach(::println)
+    FList.of(1, 2, 3, 4, 5)
+        .take(0)
+        .forEach(::println)
+    FList.of(1, 2, 3, 4, 5)
+        .take(6)
+        .forEach(::println)
 }
