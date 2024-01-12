@@ -73,5 +73,9 @@ fun main() {
         return (square compose right compose stringify)(b)
     }
 
+    fun comp3(a: Int, b: Int): String = b pipe
+            (square compose (a pipe (double compose sum.curry())) compose stringify)
+
     println(comp(10, 2))
+    println(comp3(10, 2))
 }
