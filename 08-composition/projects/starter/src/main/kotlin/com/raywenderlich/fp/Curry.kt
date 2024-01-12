@@ -38,6 +38,8 @@ fun <A, B, C> Fun2<A, B, C>.curry(): (A) -> (B) -> (C) = { a: A ->
     }
 }
 
+infix fun <A, B> A.pipe(f: Fun<A, B>): B = f(this)
+
 fun sum(a: Int): (Int) -> Int = { b: Int -> a + b}
 fun main() {
     val double = { a: Int -> a * 2 }
@@ -52,8 +54,24 @@ fun main() {
     val curriedSum = sum.curry() // (Int) -> (Int) -> (Int)
     val addThree =  curriedSum(3) // (Int) -> (Int)
     val result = addThree(4)
-    println(curriedSum)
-    println(addThree)
+//    println(curriedSum)
+//    println(addThree)
     println(result)
 
+    fun comp(a: Int, b: Int): String {
+        val currySum: (Int) -> (Int) -> Int = sum.curry()
+        println(currySum)
+        val doubleComposeSum: (Int) -> (Int) -> Int = double compose currySum
+        println(doubleComposeSum)
+        val right: (Int) -> Int = doubleComposeSum(a)
+        println(right)
+        return (square compose right compose stringify) (b)
+    }
+
+    fun comp2(a: Int, b: Int):String {
+        val right = (double compose sum.curry()) (a)
+        return (square compose right compose stringify)(b)
+    }
+
+    println(comp(10, 2))
 }
