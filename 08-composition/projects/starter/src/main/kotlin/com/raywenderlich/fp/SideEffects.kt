@@ -29,3 +29,55 @@
  */
 
 package com.raywenderlich.fp
+
+typealias Writer<A, B> = (A) -> Pair<B, String>
+
+infix fun <A, B, C> Writer<A, B>.compose(
+    g: Writer<B, C>
+): Writer<A, C> = { a: A ->
+    val (b, str) = this(a)
+    val (c, str2) = g(b)
+    c to "$str $str2"
+}
+
+fun pureFunction(x: Int) = x * x - 1
+
+fun functionWithEffect(x: Int): Int {
+    val result = x * x - 1
+    println("Result: $result")
+    return result
+}
+
+fun functionWithWriter(x: Int): Pair<Int, String>{
+    val result = x * x - 1
+    return result to "Result: $result"
+}
+
+fun main() {
+/*    pureFunction(5) pipe ::println
+    pureFunction(5) pipe ::println
+    pureFunction(5) pipe ::println
+
+    functionWithEffect(5) pipe ::println
+    functionWithEffect(5) pipe ::println
+    functionWithEffect(5) pipe ::println
+ */
+
+    listOf(1, 2, 3)
+        .map(::pureFunction) pipe ::println
+
+    listOf(1, 2, 3).map(::pureFunction).map(::pureFunction) pipe ::println
+    listOf(1, 2, 3).map(::pureFunction compose ::pureFunction) pipe ::println
+
+    listOf(1, 2, 3).map(::functionWithEffect).map(::functionWithEffect) pipe ::println
+    listOf(1, 2, 3).map(::functionWithEffect compose ::functionWithEffect) pipe ::println
+
+    val square = { a: Int -> a * a }
+    val double = { a: Int -> a * 2 }
+    val squareFunAndWrite = square compose ::functionWithWriter
+    val doubleFunAndWrite = double compose ::functionWithWriter
+    // val compFunWithWriter = ::functionWithWriter compose ::functionWithWriter
+    val compFunWithWriter = squareFunAndWrite compose doubleFunAndWrite
+    compFunWithWriter(5).second pipe ::println
+
+}
