@@ -30,3 +30,30 @@
 
 package com.raywenderlich.fp
 
+typealias Fun2<A, B, C> = (A, B) -> C
+
+fun <A, B, C> Fun2<A, B, C>.curry(): (A) -> (B) -> (C) = { a: A ->
+    { b: B ->
+        this(a, b)
+    }
+}
+
+fun sum(a: Int): (Int) -> Int = { b: Int -> a + b}
+fun main() {
+    val double = { a: Int -> a * 2 }
+    val square = { a: Int -> a * a }
+    val sum = { a: Int, b: Int -> a + b }
+    val stringify = Int::toString
+
+    /* val addThree = sum(3)
+    val result = addThree(4)
+    println(result)*/
+
+    val curriedSum = sum.curry() // (Int) -> (Int) -> (Int)
+    val addThree =  curriedSum(3) // (Int) -> (Int)
+    val result = addThree(4)
+    println(curriedSum)
+    println(addThree)
+    println(result)
+
+}
