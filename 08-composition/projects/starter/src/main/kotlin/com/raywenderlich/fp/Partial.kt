@@ -29,3 +29,63 @@
  */
 
 package com.raywenderlich.fp
+
+import kotlin.math.log
+
+fun interface Logger {
+    fun log(msg: String)
+}
+
+fun interface Calculator {
+    fun multiply(a: Double, b: Double) : Double
+}
+
+fun interface DB {
+    fun save(result: Double)
+}
+
+fun interface CalculatorFactory {
+    fun create(db: DB, logger: Logger): Calculator
+}
+
+val calculatorFactoryImpl = CalculatorFactory { db, logger ->
+    object : Calculator {
+        override fun multiply(a: Double, b: Double): Double {
+            val result = a * b
+            db.save(result)
+            logger.log("$a * $b = $result")
+            return result
+        }
+
+    }
+}
+
+fun main() {
+    val db = DB {
+        println("Saving value: $it")
+    }
+
+    val simpleLogger = Logger {
+        println("Logging: $it")
+    }
+
+    val fileLogger = Logger {
+        println("Logging on file: $it")
+    }
+
+/*
+    val calculator1 = calculatorFactoryImpl.create(db, simpleLogger)
+    val calculator2 = calculatorFactoryImpl.create(db, fileLogger)
+    println(calculator1.multiply(2.0, 3.0))
+    println(calculator2.multiply(2.0, 3.0))
+*/
+
+    val partialFactory = calculatorFactoryImpl::create.curry()
+    val partialFactoryWithDb = partialFactory(db)
+    val calculator1 = partialFactoryWithDb(simpleLogger)
+    val calculator2 = partialFactoryWithDb(fileLogger)
+
+    println(calculator1.multiply(2.0, 3.0))
+    println(calculator2.multiply(2.0, 3.0))
+
+}
