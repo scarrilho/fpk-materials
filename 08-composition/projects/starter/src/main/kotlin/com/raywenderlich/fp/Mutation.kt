@@ -29,3 +29,51 @@
  */
 
 package com.raywenderlich.fp
+
+typealias Updater<T> = (T) -> T
+typealias WithMutation<A, B, S> = (A) -> Pair<B, Updater<S>>
+
+inline infix fun <A, B, C, S> WithMutation<A, B, S>.compose(
+    crossinline g: WithMutation<B, C, S>
+): WithMutation<A, C, S> = { a: A ->
+    val (b, op) = this(a)
+    val (c, op2) = g(b)
+    c to (op compose op2)
+
+}
+
+fun squareWithEffect(x: Int): Pair<Int, Updater<MutableCounter>> {
+    val result = x * x
+    return result to { counter -> counter.count *= 10; counter}
+}
+
+fun doubleWithEffect(x: Int): Pair<Int, Updater<MutableCounter>> {
+    val result = x * 2
+    return result to { counter -> counter.count /= 2; counter}
+}
+data class MutableCounter(
+    var count: Int = 1
+)
+
+val counter = MutableCounter()
+
+/*
+fun squareWithMutationEffect(x: Int): Int {
+    val result = x * x
+    counter.count *= 10
+    return result
+}
+
+fun doubleWithMutationEffect(x: Int): Int {
+    val result = x * 2
+    counter.count /= 2
+    return result
+}*/
+
+fun main() {
+    val composed = ::squareWithEffect compose ::doubleWithEffect compose ::squareWithEffect
+    val  counter = MutableCounter()
+    val (result, comUpdate) = composed(3)
+    result pipe ::println
+    counter pipe comUpdate pipe ::println
+}
