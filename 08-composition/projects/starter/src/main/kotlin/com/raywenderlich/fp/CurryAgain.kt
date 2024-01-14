@@ -29,3 +29,25 @@
  */
 
 package com.raywenderlich.fp
+
+//fun functionWithAnotherEffect(x: Int): String {
+//    val result = x * x - 1
+//    return "Result: $result calculated on ${System.currentTimeMillis()}"
+//}
+
+fun functionWithAnotherEffect(time: Long = System.currentTimeMillis(), x: Int): String {
+    val result = x * x - 1
+    return "Result: $result calculated on $time"
+}
+
+fun main() {
+    /*functionWithAnotherEffect(5) pipe ::println
+    functionWithAnotherEffect(5) pipe ::println*/
+    functionWithAnotherEffect(123L, 5) pipe ::println
+    functionWithAnotherEffect(123L, 5) pipe ::println
+
+    val forTesting = 123L pipe ::functionWithAnotherEffect.curry()
+
+    forTesting(5) pipe ::println
+    forTesting(5) pipe ::println
+}
