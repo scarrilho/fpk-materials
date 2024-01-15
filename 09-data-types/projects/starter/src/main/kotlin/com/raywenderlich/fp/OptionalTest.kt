@@ -29,3 +29,24 @@
  */
 
 package com.raywenderlich.fp
+
+fun strToInt(value: String): Optional<Int> =
+    try {
+        Optional.lift(value.toInt())
+    } catch (nfe: NumberFormatException) {
+        Optional.empty()
+    }
+
+fun double(value: Int): Int = value * 2
+
+
+fun main() {
+    val res = strToInt("f10")
+    when (res) {
+        is Some<Int> -> {
+            val res2 = double(res.value)
+            println("Result is $res2")
+        }
+        is None -> println("Error!")
+    }
+}
