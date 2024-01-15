@@ -29,3 +29,17 @@
  */
 
 package com.raywenderlich.fp
+
+sealed class Optional<out T> {
+    companion object {
+        @JvmStatic
+        fun <T> lift(value: T): Optional<T> = Some(value)
+
+        @JvmStatic
+        fun <T> empty(): Optional<T> = None
+    }
+}
+
+object None : Optional<Nothing>()
+
+data class Some<T>(val value: T): Optional<T>()
