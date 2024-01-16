@@ -39,7 +39,7 @@ fun strToInt(value: String): Optional<Int> =
 
 fun double(value: Int): Int = value * 2
 
-
+/*
 fun main() {
     val res = strToInt("f10")
     when (res) {
@@ -49,4 +49,14 @@ fun main() {
         }
         is None -> println("Error!")
     }
+}*/
+
+fun main() {
+    Optional
+        .lift("10a")
+        .flatMap(::strToInt)
+        .map(::double)
+        .getOrDefault(-1)
+        .pipe(::println)
+
 }
