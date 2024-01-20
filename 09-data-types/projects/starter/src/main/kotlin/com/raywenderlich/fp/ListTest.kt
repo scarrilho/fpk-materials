@@ -29,3 +29,13 @@
  */
 
 package com.raywenderlich.fp
+
+fun countUpTo(value: Int) = List(value) { it }
+
+fun main() {
+    val emptyList = emptyList<Int>()
+    val intList = listOf(1, 2, 3)
+    intList.map(::double).forEach(::println)
+    println("--")
+    intList.flatMap(::countUpTo).forEach(::println)
+}
