@@ -108,4 +108,21 @@ fun main() {
 
     list.foldRight(0) { item, acc -> acc + item } pipe ::println
     list.foldRight(1) { item, acc -> acc * item } pipe ::println
+
+    // with Strings
+    list.map(Int::toString).declarativeFold("") { acc, item ->
+        acc + item
+    } pipe ::println
+
+    list.map(Int::toString).fold("") { acc, item ->
+        acc + item
+    } pipe ::println
+
+    list.map(Int::toString).declarativeFoldRight("") { item, acc ->
+        acc + item
+    } pipe ::println
+
+    list.map(Int::toString).foldRight("") { item, acc ->
+        acc + item
+    } pipe ::println
 }
