@@ -13,11 +13,20 @@ fun String.reverse(): String =
         acc + item
     }
 
+fun reverseAlt(str: String) =
+    str.toCharArray().toList()
+        .declarativeFoldRight(StringBuilder()) { c, acc ->
+            acc.append(c)
+            acc
+        }.toString()
+
 fun main() {
-    val s = "Hello world!"
+    val s = "supercalifragilisticexpialidocious"
     reverseString(s) pipe ::println
 
-    "Hello world!".reverse() pipe ::println
+    s.reverse() pipe ::println
 
-    "Hello world!" pipe ::reverseString pipe ::println
+    s pipe ::reverseString pipe ::println
+
+    reverseAlt(s) pipe ::println
 }
