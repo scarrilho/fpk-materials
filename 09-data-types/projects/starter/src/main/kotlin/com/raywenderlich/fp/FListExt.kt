@@ -56,6 +56,9 @@ fun <T, S> FList<T>.map(fn: Fun<T, S>): FList<S> =
         is FCons<T> -> FCons(fn(head), tail.map(fn))
     }
 
+fun <T> FList<T>.append(rhs: FList<T>): FList<T> =
+    foldRight(rhs, { item, acc -> FCons(item, acc) })
+
 fun main() {
     val numbers = FList.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     numbers.fold(0) { acc, item -> acc + item } pipe ::println
