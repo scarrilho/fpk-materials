@@ -64,3 +64,29 @@ fun <A, B, D> Either<A, B>.rightMap(
     is Right<B> -> Either.right(fr(right))
     is Left<A> -> this
 }
+ fun <A, B> Either<A, B>.getOrDefault(
+     defaultValue: B
+ ): B = when (this) {
+     is Left<A> -> defaultValue
+     is Right<B> -> right
+ }
+
+fun <A, B> Either<A, B>.getRightOrDefault(
+    defaultValue: B
+): B = when (this) {
+    is Left<A> -> defaultValue
+    is Right<B> -> right
+}
+
+fun <A, B> Either<A,B>.getLeftOrDefault(
+    defaultValue: A
+): A = when (this) {
+    is Left<A> -> left
+    is Right<B> -> defaultValue
+}
+
+fun <A, B> Either<A, B>.flip(): Either<B, A> =
+    when (this) {
+        is Left<A> -> Either.right(left)
+        is Right<B> -> Either.left(right)
+    }

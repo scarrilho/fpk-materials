@@ -30,10 +30,21 @@
 
 package com.raywenderlich.fp
 
-fun strToEither(
+fun strToIntEither(
     str: String
 ): Either<NumberFormatException, Int> = try {
     Either.right(str.toInt())
 } catch (nfe: NumberFormatException) {
     Either.left(nfe)
+}
+
+fun main() {
+    val squareValue = { a: Int -> a * a }
+    val formatError = { ex: Exception ->
+        "Error ${ex.localizedMessage}"
+    }
+    strToIntEither("10").bimap(formatError, squareValue).getOrDefault(-1).pipe(::println)
+    strToIntEither("10").bimap(formatError, squareValue).flip().getOrDefault("No Error!").pipe(::println)
+    strToIntEither("10").rightMap(squareValue).getOrDefault(-1).pipe(::println)
+    strToIntEither("10aaaa").leftMap(formatError).getOrDefault("Generic Error!").pipe(::println)
 }
