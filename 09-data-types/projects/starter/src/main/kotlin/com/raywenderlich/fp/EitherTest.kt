@@ -29,3 +29,11 @@
  */
 
 package com.raywenderlich.fp
+
+fun strToEither(
+    str: String
+): Either<NumberFormatException, Int> = try {
+    Either.right(str.toInt())
+} catch (nfe: NumberFormatException) {
+    Either.left(nfe)
+}
