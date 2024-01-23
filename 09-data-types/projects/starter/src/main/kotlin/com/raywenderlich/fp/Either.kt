@@ -90,3 +90,34 @@ fun <A, B> Either<A, B>.flip(): Either<B, A> =
         is Left<A> -> Either.right(left)
         is Right<B> -> Either.left(right)
     }
+
+fun <A, B, D> Either<A, B>.flatMap(
+    fn: (B) -> Either<A, D>
+): Either<A, D> = when (this) {
+    is Left<A> -> Either.left(left)
+    is Right<B> -> {
+        val result = fn(right)
+        when (result) {
+            is Left<A> -> Either.left(result.left)
+            is Right<D> -> Either.right(result.right)
+        }
+    }
+}
+
+fun main() {
+    val squareValue = { a: Int -> a * a }
+
+    strToIntEither("10")
+        .rightMap(squareValue)
+        .rightMap(Int::toString)
+        .flatMap(::strToIntEither)
+        .getOrDefault(-1)
+        .pipe(::println)
+
+    strToIntEither("10a")
+        .rightMap(squareValue)
+        .rightMap(Int::toString)
+        .flatMap(::strToIntEither)
+        .getOrDefault(-1)
+        .pipe(::println)
+}
