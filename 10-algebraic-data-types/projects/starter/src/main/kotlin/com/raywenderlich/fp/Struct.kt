@@ -29,3 +29,16 @@
  */
 
 package com.raywenderlich.fp
+
+typealias  BoolPair = Pair<Boolean, Boolean>
+typealias UnitTriage = Pair<Unit, Triage>
+typealias TriageUnit = Pair<Triage, Unit>
+typealias NothingTriage = Pair<Nothing, Triage>
+
+enum class Triage {
+    RED, YELLOW, GREEN
+}
+
+val unit11 = Unit to Triage.RED
+val unit21 = Unit to Triage.YELLOW
+val unit31 = Unit to Triage.GREEN

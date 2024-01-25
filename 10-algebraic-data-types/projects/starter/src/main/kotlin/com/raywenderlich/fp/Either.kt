@@ -29,3 +29,16 @@
  */
 
 package com.raywenderlich.fp
+
+sealed class Either<out A, out B>
+data class Left<A>(val left: A) : Either<A, Nothing>()
+data class Right<B>(val right: B) : Either<Nothing, B>()
+
+typealias EitherBooleanOrBoolean = Either<Boolean, Boolean>
+typealias EitherBooleanOrTriage = Either<Boolean, Triage>
+typealias EitherBooleanOrNothing = Either<Boolean, Nothing>
+
+val either1 = Left(true)
+val either2 = Left(false)
+val either3 = Right(true)
+val either4 = Right(false)

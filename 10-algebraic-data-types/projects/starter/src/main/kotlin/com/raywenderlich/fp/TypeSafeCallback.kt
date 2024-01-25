@@ -29,3 +29,23 @@
  */
 
 package com.raywenderlich.fp
+
+typealias Callback<Data, Result, Error> =
+        (Data, Result?, Error?) -> Unit
+
+typealias SafeCallback<Data, Result, Error> =
+        (Pair<Data, Either<Error, Result>>) -> Unit
+
+class Response
+class Info
+class ErrorInfo
+
+fun runAsync(callback: Callback<Response, Info, ErrorInfo>) {
+    // TODO
+}
+
+fun runAsyncSafe(callback: SafeCallback<Response, Info, ErrorInfo>) {
+    callback(Response() to Right(Info()))
+    callback(Response() to Left(ErrorInfo()))
+
+}
