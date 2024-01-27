@@ -29,3 +29,8 @@
  */
 
 package com.raywenderlich.fp
+
+fun <A, B, C, D> Pair<A, B>.bimap(
+    fl: Fun<A, C>,
+    fr: Fun<B, D>
+): Pair<C, D> = fl(first) to fr(second)
