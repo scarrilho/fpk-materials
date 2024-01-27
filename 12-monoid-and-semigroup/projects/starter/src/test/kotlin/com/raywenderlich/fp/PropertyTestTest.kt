@@ -30,6 +30,91 @@
 
 package com.raywenderlich.fp
 
-class PropertyTestTest {
+import com.google.common.truth.Truth
+import com.raywenderlich.fp.exercises.DoubleIncrementProperty
+import org.junit.Test
+import kotlin.random.Random
 
+class PropertyTestTest {
+   /* @Test
+    fun `sum test using predefined values`() {
+        Truth.assertThat(sum(2, 3)).isEqualTo(5)
+        Truth.assertThat(sum(2, 5)).isEqualTo(7)
+        Truth.assertThat(sum(-2, 5)).isEqualTo(3)
+    }
+
+    @Test
+    fun `sum test using random values`() {
+        val firstValue = Random.nextInt()
+        val secondValue = Random.nextInt()
+        val expectedValue = firstValue + secondValue
+        Truth.assertThat(sum(firstValue, secondValue))
+            .isEqualTo(expectedValue)
+    }
+
+    @Test
+    fun `sum test using random values 100 times`() {
+        100.times {
+            val firstValue = Random.nextInt()
+            val secondValue = Random.nextInt()
+            val expectedValue = firstValue + secondValue
+            Truth.assertThat(sum(firstValue, secondValue))
+                .isEqualTo(expectedValue)
+        }
+    }
+*/
+    @Test
+    fun `test sum is commutative`() {
+        100.times {
+            val firstValue = Random.nextInt()
+            val secondValue = Random.nextInt()
+            val result1 = sum(firstValue, secondValue)
+            val result2 = sum(secondValue, firstValue)
+            Truth.assertThat(result1).isEqualTo(result2)
+        }
+    }
+
+    @Test
+    fun `test addition is not multiplication`() {
+        100.times {
+            val randomValue = Random.nextInt()
+            val result1 = sum(sum(randomValue, 1), 1)
+            val result2 = sum(randomValue, 2)
+            Truth.assertThat(result1).isEqualTo(result2)
+        }
+    }
+
+    @Test
+    fun `test using unit value for addition`() {
+        100.times {
+            val randomValue = Random.nextInt()
+            val result1 = sum(randomValue, 0)
+            val expected = randomValue
+            Truth.assertThat(result1).isEqualTo(expected)
+        }
+    }
+
+    @Test
+    fun `Property-based test for sum`() {
+        100.times {
+            val additionProp = CommutativeProperty<Int>() and
+                    AssociativeProperty() and IdentityProperty(0)
+            val evaluation = additionProp(IntGenerator) {
+                sum(it[0], it[1])
+            }
+            Truth.assertThat(evaluation).isTrue()
+        }
+    }
+
+    @Test
+    fun `Exercise 5 solution`() {
+        100.times {
+            val additionProp = CommutativeProperty<Int>() and
+                    DoubleIncrementProperty() and IdentityProperty(0)
+            val evaluation = additionProp(IntGenerator) {
+                sum(it[0], it[1])
+            }
+            Truth.assertThat(evaluation).isTrue()
+        }
+    }
 }

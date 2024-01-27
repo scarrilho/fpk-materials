@@ -31,5 +31,66 @@
 
 package com.raywenderlich.fp
 
+import org.junit.Test
+import kotlin.random.Random
+
 /** Simple sum of two integer */
 fun sum(a: Int, b: Int): Int = a + b
+
+// fun sum(a: Int, b: Int): Int = a * b
+// fun sum(a: Int, b: Int): Int = 0
+
+fun interface Generator<T> {
+    fun generate(n: Int): List<T>
+}
+
+object IntGenerator: Generator<Int> {
+    override fun generate(n: Int): List<Int> = List(n) {
+        Random.nextInt()
+    }
+}
+
+interface Property<T> {
+    operator fun invoke(
+        gen: Generator<T>,
+        fn: (List<T>) -> T
+    ): Boolean
+}
+
+class CommutativeProperty<T> : Property<T> {
+    override fun invoke(gen: Generator<T>, fn: (List<T>) -> T): Boolean {
+        val values = gen.generate(2)
+        val res1 = fn(listOf(values[0], values[1]))
+        val res2 = fn(listOf(values[1], values[0]))
+        return res1 == res2
+    }
+}
+
+class AssociativeProperty<T> : Property<T> {
+    override fun invoke(gen: Generator<T>, fn: (List<T>) -> T): Boolean {
+       val values = gen.generate(3)
+        val res1 = fn(listOf(fn(listOf(values[0], values[1])), values[2]))
+        val res2 = fn(listOf(values[0], fn(listOf(values[1], values[2]))))
+        return res1 == res2
+    }
+}
+
+class IdentityProperty<T>(private val unit: T) : Property<T> {
+    override fun invoke(gen: Generator<T>, fn: (List<T>) -> T): Boolean {
+       val randomValue = gen.generate(1)[0]
+        val res1 = fn(listOf(randomValue, unit))
+        val res2 = fn(listOf(unit, randomValue))
+        return res1 == randomValue && res2 == randomValue
+    }
+}
+
+
+infix fun <T> Property<T>.and(
+    rightProp: Property<T>
+): Property<T> = object : Property<T> {
+    override fun invoke(
+        gen: Generator<T>,
+        fn: (List<T>) -> T
+    ): Boolean =
+       this@and(gen, fn) && rightProp(gen, fn)
+}
