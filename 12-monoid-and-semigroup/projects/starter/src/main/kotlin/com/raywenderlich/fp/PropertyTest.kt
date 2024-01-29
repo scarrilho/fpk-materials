@@ -68,7 +68,7 @@ class CommutativeProperty<T> : Property<T> {
 
 class AssociativeProperty<T> : Property<T> {
     override fun invoke(gen: Generator<T>, fn: (List<T>) -> T): Boolean {
-       val values = gen.generate(3)
+        val values = gen.generate(3)
         val res1 = fn(listOf(fn(listOf(values[0], values[1])), values[2]))
         val res2 = fn(listOf(values[0], fn(listOf(values[1], values[2]))))
         return res1 == res2
@@ -77,7 +77,7 @@ class AssociativeProperty<T> : Property<T> {
 
 class IdentityProperty<T>(private val unit: T) : Property<T> {
     override fun invoke(gen: Generator<T>, fn: (List<T>) -> T): Boolean {
-       val randomValue = gen.generate(1)[0]
+        val randomValue = gen.generate(1)[0]
         val res1 = fn(listOf(randomValue, unit))
         val res2 = fn(listOf(unit, randomValue))
         return res1 == randomValue && res2 == randomValue
@@ -92,5 +92,25 @@ infix fun <T> Property<T>.and(
         gen: Generator<T>,
         fn: (List<T>) -> T
     ): Boolean =
-       this@and(gen, fn) && rightProp(gen, fn)
+        this@and(gen, fn) && rightProp(gen, fn)
+}
+
+class StringGenerator(
+    private val minLength: Int = 0,
+    private val maxLength: Int = 10
+) : Generator<String> {
+    val chars = "abcdefghijklmnopqrstuvwxyz" +
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+            "1234567890-^¥"
+
+    override fun generate(n: Int): List<String> = List(n) {
+        val length = Random.nextInt(minLength, maxLength)
+        val currentString = StringBuilder()
+        (1..length).forEach {
+            currentString.append(
+                chars[Random.nextInt(0, chars.length)]
+            )
+        }
+        currentString.toString()
+    }
 }
