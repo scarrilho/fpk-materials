@@ -30,6 +30,15 @@
 
 package com.raywenderlich.fp
 
+import com.google.common.truth.Truth.assertThat
+import com.raywenderlich.fp.exercises.Optional
+import org.junit.Test
+
 class OptionalMonadKtTest {
+
+    @Test
+    fun `When input is not valid returns None`() {
+        assertThat(strToInt("onetwothree")).isEqualTo(Optional.None)
+    }
 
 }

@@ -29,3 +29,32 @@
  */
 
 package com.raywenderlich.fp
+
+import com.raywenderlich.fp.exercises.Optional
+import com.raywenderlich.fp.exercises.Optional.None.optionalFish
+import com.raywenderlich.fp.exercises.flatMap
+import javax.swing.text.html.Option
+import kotlin.math.sqrt
+
+//fun strToInt(str: String): Int = str.toInt()
+
+fun strToInt(str: String): Optional<Int> =
+    try {
+        Optional.lift(str.toInt())
+    } catch (nfe: NumberFormatException) {
+        Optional.None
+    }
+
+fun root(number: Int): Optional<Double> =
+    if (number < 0) Optional.None else Optional.lift(sqrt(number.toDouble()))
+
+fun main() {
+//    strToInt("123") pipe ::println
+    strToInt("onetwothree") pipe ::println
+    val strToRoot = ::strToInt optionalFish ::root
+    strToRoot("onetwothree") pipe ::println
+    strToRoot("1234") pipe ::println
+
+    strToInt("onetwothree").flatMap(::root) pipe ::println
+    strToInt("1234").flatMap(::root) pipe ::println
+}
