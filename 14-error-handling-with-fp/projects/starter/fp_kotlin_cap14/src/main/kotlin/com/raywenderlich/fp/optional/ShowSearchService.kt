@@ -30,6 +30,10 @@
 
 package com.raywenderlich.fp.optional
 
+import com.raywenderlich.fp.applicative.ResultAp
+import com.raywenderlich.fp.applicative.errorMap
+import com.raywenderlich.fp.applicative.flatMap
+import com.raywenderlich.fp.applicative.successMap
 import com.raywenderlich.fp.lib.*
 import com.raywenderlich.fp.model.ScoredShow
 import com.raywenderlich.fp.tools.fetchers.TvShowFetcher
@@ -79,6 +83,25 @@ fun fetchAndParseTvShowEither(query: String) =
     fetchTvShowEither(query)
         .flatMap(::parseTvShowEither)
 
+fun fetchTvShowResultAp(
+    query: String
+): ResultAp<IOException, String> = try {
+    ResultAp.success(TvShowFetcher.fetch(query))
+} catch (ioe: IOException) {
+    ResultAp.error(ioe)
+}
+
+fun parseTvShowResultAp(
+    json: String
+): ResultAp<SerializationException, List<ScoredShow>> = try {
+    ResultAp.success(TvShowParser.parse(json))
+} catch (e: SerializationException) {
+    ResultAp.error(e)
+}
+
+fun fetchAndParseTvShowResultAp(query: String) =
+    fetchTvShowResultAp(query).flatMap(::parseTvShowResultAp)
+
 fun main() {
     fetchAndParseTvShow("Big Bang Theory")
         .getOrDefault(emptyList<ScoredShow>()) pipe ::println
@@ -87,6 +110,15 @@ fun main() {
             println("Error: $it")
         }
         .rightMap {
+            println("Result: $it")
+        }
+//    fetchAndParseTvShowResultAp("Big Bang Theory") pipe ::println
+    fetchAndParseTvShowResultAp("Big Bang Theory")
+        .errorMap {
+            println("Error2: $it")
+            it
+        }
+        .successMap {
             println("Result: $it")
         }
 }
