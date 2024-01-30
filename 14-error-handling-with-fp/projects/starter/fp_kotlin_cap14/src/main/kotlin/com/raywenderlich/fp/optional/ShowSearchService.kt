@@ -30,10 +30,7 @@
 
 package com.raywenderlich.fp.optional
 
-import com.raywenderlich.fp.lib.Optional
-import com.raywenderlich.fp.lib.flatMap
-import com.raywenderlich.fp.lib.getOrDefault
-import com.raywenderlich.fp.lib.pipe
+import com.raywenderlich.fp.lib.*
 import com.raywenderlich.fp.model.ScoredShow
 import com.raywenderlich.fp.tools.fetchers.TvShowFetcher
 import com.raywenderlich.fp.tools.parser.TvShowParser
@@ -61,7 +58,35 @@ fun parseTvShowString(
 fun fetchAndParseTvShow(query: String) =
     fetchTvShowOptional(query).flatMap(::parseTvShowString)
 
+fun fetchTvShowEither(
+    query: String
+): Either<IOException, String> = try {
+    Either.right(TvShowFetcher.fetch(query))
+} catch (ioe: IOException) {
+    Either.left(ioe)
+}
+
+/** Invokes the parser returning an Optional */
+fun parseTvShowEither(
+    json: String
+): Either<SerializationException, List<ScoredShow>> = try {
+    Either.right(TvShowParser.parse(json))
+} catch (e: SerializationException) {
+    Either.left(e)
+}
+
+fun fetchAndParseTvShowEither(query: String) =
+    fetchTvShowEither(query)
+        .flatMap(::parseTvShowEither)
+
 fun main() {
     fetchAndParseTvShow("Big Bang Theory")
         .getOrDefault(emptyList<ScoredShow>()) pipe ::println
+    fetchAndParseTvShowEither("Big Bang Theory")
+        .leftMap {
+            println("Error: $it")
+        }
+        .rightMap {
+            println("Result: $it")
+        }
 }
