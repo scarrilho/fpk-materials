@@ -29,3 +29,54 @@
  */
 
 package com.raywenderlich.fp.validation
+
+import com.raywenderlich.fp.applicative.*
+import com.raywenderlich.fp.lib.curry
+
+data class User(
+    val id: Int,
+    val name: String,
+    val email: String
+)
+
+class ValidationException(msg: String) : Exception(msg)
+
+/** Name validation **/
+fun validateName(
+    name: String
+): ResultAp<ValidationException, String> =
+    if (name.length > 4) {
+        Success(name)
+    } else {
+        Error(ValidationException("Invalid name"))
+    }
+
+/** Email validation **/
+fun validateEmail(
+    email: String
+): ResultAp<ValidationException, String> =
+    if (email.contains("@")) {
+        Success(email)
+    } else {
+        Error(ValidationException("Invalid email"))
+    }
+
+fun main() {
+    val userBuilder = ::User.curry()
+    val userApplicative = ResultAp.success(userBuilder)
+    val idAp = ResultAp.success(1)
+    validateEmail("max@maxcarli.it")
+        .ap(
+           validateName("Massimo")
+               .ap(
+                   idAp.ap(userApplicative)
+               )
+        )
+        .errorMap {
+            println("Error: $it"); it
+        }
+        .successMap {
+            println("Success $it")
+        }
+
+}

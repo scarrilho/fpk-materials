@@ -74,3 +74,13 @@ sealed class ResultAp<out E: Throwable, out T> {
             }
         }
     }
+
+fun <E : Throwable, T, R> ResultAp<E, T>.ap(
+    fn: ResultAp<E, (T) -> R>
+): ResultAp<E, R> = when (fn) {
+    is Success<(T) -> R> -> successMap(fn.value)
+    is Error<E> -> when (this) {
+        is Success<T> -> Error(fn.error)
+        is Error<E> -> Error(this.error)
+    }
+}
