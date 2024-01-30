@@ -29,3 +29,39 @@
  */
 
 package com.raywenderlich.fp.optional
+
+import com.raywenderlich.fp.lib.Optional
+import com.raywenderlich.fp.lib.flatMap
+import com.raywenderlich.fp.lib.getOrDefault
+import com.raywenderlich.fp.lib.pipe
+import com.raywenderlich.fp.model.ScoredShow
+import com.raywenderlich.fp.tools.fetchers.TvShowFetcher
+import com.raywenderlich.fp.tools.parser.TvShowParser
+import kotlinx.serialization.SerializationException
+import java.io.IOException
+
+fun fetchTvShowOptional(
+    query: String
+): Optional<String> = try {
+    Optional.lift(TvShowFetcher.fetch(query))
+} catch (ioe: IOException) {
+    Optional.empty()
+}
+
+/** Invokes the parser returning an Optional */
+fun parseTvShowString(
+    json: String
+): Optional<List<ScoredShow>> =
+    try {
+        Optional.lift((TvShowParser.parse(json)))
+    } catch (e: SerializationException){
+        Optional.empty()
+    }
+
+fun fetchAndParseTvShow(query: String) =
+    fetchTvShowOptional(query).flatMap(::parseTvShowString)
+
+fun main() {
+    fetchAndParseTvShow("Big Bang Theory")
+        .getOrDefault(emptyList<ScoredShow>()) pipe ::println
+}
