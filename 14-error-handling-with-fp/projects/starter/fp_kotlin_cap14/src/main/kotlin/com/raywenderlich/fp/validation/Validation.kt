@@ -61,10 +61,25 @@ fun validateEmail(
         Error(ValidationException("Invalid email"))
     }
 
+infix fun <E : Throwable, A, B> ResultAp<E, (A) -> B>.appl(
+    a: ResultAp<E, A>
+) = a.ap(this)
+
 fun main() {
     val userBuilder = ::User.curry()
     val userApplicative = ResultAp.success(userBuilder)
     val idAp = ResultAp.success(1)
+    (userApplicative appl
+            idAp appl
+            validateName("Massimo") appl
+            validateEmail("max@maccarli.it"))
+        .errorMap {
+            println("Error: $it"); it
+        }
+        .successMap {
+            println("Succcess $it")
+        }
+/*
     validateEmail("max@maxcarli.it")
         .ap(
            validateName("Massimo")
@@ -78,5 +93,6 @@ fun main() {
         .successMap {
             println("Success $it")
         }
+*/
 
 }
