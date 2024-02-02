@@ -107,8 +107,8 @@ fun main() {
 
     (userApplicative applsg
             idAp applsg
-            validateNameSg("") applsg
-            validateEmailSg(""))
+            validateNameSg("Massimo") applsg
+            validateEmailSg("max@maxcarli.it"))
         .errorMap {
             println(it.localizedMessage); it
         }
