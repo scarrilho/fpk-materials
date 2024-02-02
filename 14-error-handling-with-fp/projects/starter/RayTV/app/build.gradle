@@ -3,7 +3,7 @@ plugins {
   id 'kotlin-android'
   id 'kotlin-kapt'
   id 'dagger.hilt.android.plugin'
-  id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.31'
+  id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.0'
 }
 
 android {
@@ -45,7 +45,7 @@ android {
   }
   composeOptions {
     kotlinCompilerExtensionVersion compose_version
-    kotlinCompilerVersion '1.5.21'
+    kotlinCompilerVersion '1.6.0'
   }
   packagingOptions {
     resources {
