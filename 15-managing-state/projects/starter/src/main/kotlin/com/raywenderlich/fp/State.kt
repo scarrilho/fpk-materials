@@ -29,3 +29,12 @@
  */
 
 package com.raywenderlich.fp
+
+// typealias StateTransformer<S> = (S) -> S
+typealias StateTransformer<S, T> = (S) -> Pair<T, S>
+
+/*val skuStateTransformer: StateTransformer<Int> =
+    { state -> state + 1}*/
+
+val skuStateTransformer: StateTransformer<Int, String> =
+    { state -> "RAY-PROD-${String.format("%04d", state)}" to state + 1 }

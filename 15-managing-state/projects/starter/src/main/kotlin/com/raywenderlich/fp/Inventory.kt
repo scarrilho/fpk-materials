@@ -29,3 +29,33 @@
  */
 
 package com.raywenderlich.fp
+
+import com.raywenderlich.fp.lib.pipe
+
+data class Product(val id: String, val name: String)
+
+data class SkuProduct(val product: Product, val sku: String)
+
+var count = 0
+
+fun createSku(): String = "RAY-PROD-${String.format("%04d", count++)}"
+
+fun main() {
+    val prod1 = Product("1", "Cheese")
+    val prod2 = Product("2", "Bread")
+    val prod3 = Product("3", "Cake")
+/*
+    SkuProduct(prod1, createSku()) pipe ::println
+    SkuProduct(prod2, createSku()) pipe ::println
+    SkuProduct(prod3, createSku()) pipe ::println
+*/
+    val state0 = 0
+    val (sku1, state1) = skuStateTransformer(state0)
+    SkuProduct(prod1, sku1) pipe ::println
+    val (sku2, state2) = skuStateTransformer(state1)
+    SkuProduct(prod2, sku2) pipe ::println
+    val (sku3, state3) = skuStateTransformer(state2)
+    SkuProduct(prod3, sku3) pipe ::println
+
+
+}
