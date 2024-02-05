@@ -30,6 +30,8 @@
 
 package com.raywenderlich.fp
 
+import javax.swing.undo.StateEdit
+
 // typealias StateTransformer<S> = (S) -> S
 typealias StateTransformer<S, T> = (S) -> Pair<T, S>
 
@@ -38,3 +40,17 @@ typealias StateTransformer<S, T> = (S) -> Pair<T, S>
 
 val skuStateTransformer: StateTransformer<Int, String> =
     { state -> "RAY-PROD-${String.format("%04d", state)}" to state + 1 }
+
+data class State<S, T>(val st: StateTransformer<S, T>) {
+    companion object {
+        @JvmStatic
+        fun <S, T> lift(value: T): State<S, T> =
+            State({ state -> value to state })
+    }
+}
+
+operator fun <S, T> State<S, T>.invoke(state: S) = st(state)
+
+fun main() {
+    val initialState = State.lift<Int, Product>(Product("1", "Cheese"))
+}

@@ -29,3 +29,49 @@
  */
 
 package com.raywenderlich.fp
+
+import com.raywenderlich.fp.lib.Chain2
+import com.raywenderlich.fp.lib.Fun
+import com.raywenderlich.fp.lib.Fun2
+import com.raywenderlich.fp.lib.pipe
+
+fun <S, A, B> State<S, A>.map(
+    fn: Fun<A, B>
+): State<S, B> =
+    State { state ->
+        val (a, newState) = this(state)
+        fn(a) to newState
+    }
+
+val skuSerial = { sku: String -> sku.takeLast(4)}
+
+val skuState: State<Int, String> = State { state: Int ->
+    "RAY-PROD-${String.format("%04d", state)}" to state + 1
+}
+
+val skuSerialState = skuState.map(skuSerial)
+
+fun main() {
+    skuState(0) pipe ::println
+    skuSerialState(0) pipe ::println
+}
+
+fun <S, A, B, C> State<S, Pair<A, B>>.map2(
+    fn: Chain2<A, B, C>
+): State<S, C> =
+        State { state ->
+            val (pair, newState) = this(state)
+            val value = fn(pair.first)(pair.second)
+            value to newState
+        }
+
+fun <S, T, R>State<S , T>.ap(
+    fn: State<S, (T) -> R>
+): State<S, R> =
+    State { s0: S ->
+        val (t, s1) = this(s0)
+        val (fnValue, s2) = fn(s1)
+        fnValue(t) to s2
+    }
+
+

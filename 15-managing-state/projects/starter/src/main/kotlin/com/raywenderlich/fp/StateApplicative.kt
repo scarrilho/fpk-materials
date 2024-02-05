@@ -29,3 +29,32 @@
  */
 
 package com.raywenderlich.fp
+
+import com.raywenderlich.fp.lib.Chain3
+import com.raywenderlich.fp.lib.curry
+import com.raywenderlich.fp.lib.pipe
+
+fun replaceSuffix(
+    input: String,
+    lastToRemove: Int,
+    postfix: String
+) = input.dropLast(lastToRemove) + postfix
+
+val cReplaceSuffix = ::replaceSuffix.curry()
+
+infix fun <S, A, B> State<S, (A) -> B>.appl(a: State<S, A>) =
+    a.ap(this)
+
+fun main() {
+    val initialStateApp = State
+        .lift<Int, Chain3<String, Int, String, String>>(
+            cReplaceSuffix
+        )
+    val inputApp = State.lift<Int, String>("1234567890")
+    val lastToRemoveApp = State.lift<Int, Int>(4)
+    val postfix = State.lift<Int, String>("New")
+    val finalStateApp = initialStateApp appl inputApp appl
+            lastToRemoveApp appl postfix
+    inputApp(0) pipe ::println
+    finalStateApp(0) pipe ::println
+}
