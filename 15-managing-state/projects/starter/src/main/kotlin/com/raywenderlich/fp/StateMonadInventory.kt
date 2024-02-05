@@ -29,3 +29,28 @@
  */
 
 package com.raywenderlich.fp
+
+import com.raywenderlich.fp.lib.FList
+import com.raywenderlich.fp.lib.forEach
+import com.raywenderlich.fp.lib.map
+
+val products = FList.of(
+    Product("1", "Eggs"),
+    Product("2", "Flour"),
+    Product("3", "Cake"),
+    Product("4", "Pizza"),
+    Product("5", "Water"),
+)
+
+var currentCount = 0
+
+fun inventoryMap(products: FList<Product>): FList<SkuProduct> {
+    return products.map {
+        SkuProduct(it,
+            "RAY-PROD-${String.format("%04d", currentCount++)}")
+    }
+}
+
+fun main() {
+    inventoryMap(products).forEach(::println)
+}
