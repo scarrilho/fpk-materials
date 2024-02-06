@@ -30,9 +30,8 @@
 
 package com.raywenderlich.fp
 
-import com.raywenderlich.fp.lib.FList
-import com.raywenderlich.fp.lib.forEach
-import com.raywenderlich.fp.lib.map
+import com.raywenderlich.fp.lib.*
+import com.raywenderlich.fp.lib.Nil
 
 val products = FList.of(
     Product("1", "Eggs"),
@@ -51,6 +50,56 @@ fun inventoryMap(products: FList<Product>): FList<SkuProduct> {
     }
 }
 
+fun inventoryMapWithCount(
+    products: FList<Product>
+): FList<SkuProduct> {
+    var internalCount = 0
+    return products.map {
+        SkuProduct(it,
+            "RAY-PROD-${String.format("%04d", internalCount++)}")
+    }
+}
+
+fun listInventory(
+    products: FList<Product>
+): (Int) -> Pair<Int, FList<SkuProduct>> =
+    when (products) {
+        is Nil -> { count: Int -> count to Nil}
+        is FCons<Product> -> { count: Int ->
+            val (newState, tailInventory) =
+                listInventory(products.tail)(count)
+           val sku = "RAY-PROD-${String.format("%04d", newState)}"
+            newState + 1 to FCons(
+                SkuProduct(products.head, sku), tailInventory)
+        }
+    }
+
+val addSku: (Product) -> State<Int, SkuProduct> = { prod: Product ->
+    State<Int, SkuProduct> { state: Int ->
+        val newSku = "RAY-PROD-${String.format("%04d", state)}"
+        SkuProduct(prod, newSku) to state + 1
+    }
+}
+
+fun inventory(
+    list: FList<Product>
+): State<Int, FList<SkuProduct>> =
+    when (list) {
+        is Nil -> State.lift(Nil)
+        is FCons<Product> -> {
+            val head = State.lift<Int, Product>(list.head)
+                .flatMap(addSku)
+            val tail = inventory(list.tail)
+            head.zip(tail) { a: SkuProduct, b: FList<SkuProduct> ->
+                FCons(a, b)
+            }
+        }
+    }
+
 fun main() {
-    inventoryMap(products).forEach(::println)
+    /*inventoryMap(products).forEach(::println)
+    inventoryMapWithCount(products).forEach(::println)
+    listInventory(products)(0).second.forEach(::println)
+    */
+    inventory(products)(0).first.forEach(::println)
 }

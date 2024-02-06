@@ -51,6 +51,17 @@ data class State<S, T>(val st: StateTransformer<S, T>) {
 
 operator fun <S, T> State<S, T>.invoke(state: S) = st(state)
 
+fun <S, A, B, C> State<S, A>.zip(
+    s2: State<S, B>,
+    combine: (A, B) -> C
+): State<S, C> =
+    State { s0 ->
+        val (v1, s1) = this(s0)
+        val (v2, s2) = s2(s1)
+        combine(v1, v2) to s2
+
+    }
+
 fun main() {
     val initialState = State.lift<Int, Product>(Product("1", "Cheese"))
 }
