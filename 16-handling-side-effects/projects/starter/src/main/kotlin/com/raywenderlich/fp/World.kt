@@ -29,3 +29,16 @@
  */
 
 package com.raywenderlich.fp
+
+import com.raywenderlich.fp.lib.compose
+import com.raywenderlich.fp.lib.uncurryP
+
+typealias World = Unit
+typealias WorldT<T> = (World) -> Pair<T, World>
+
+typealias SideEffect = (World) -> World
+
+infix fun <A, B> WorldT<A>.myOp(
+    fn: (A) -> WorldT<B>
+): WorldT<B> = this compose fn.uncurryP()
+

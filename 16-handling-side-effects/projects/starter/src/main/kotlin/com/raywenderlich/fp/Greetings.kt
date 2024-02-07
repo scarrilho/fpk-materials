@@ -29,3 +29,54 @@
  */
 
 package com.raywenderlich.fp
+
+import com.raywenderlich.fp.lib.pipe
+import java.util.*
+
+val readName: (World) -> Pair<String, World> = { w: World ->
+    Scanner(System.`in`).nextLine() to World
+}
+
+val readNameT: WorldT<String> = readName
+
+val printString: (String) -> SideEffect = { str: String ->
+    { a: World ->
+        print(str) to World
+    }
+}
+
+val printStringT: (String) -> WorldT<Unit> = { str: String ->
+    { w: World ->
+        Unit to printString(str)(w)
+
+    }
+}
+
+
+fun askNameAndPrintGreetings(): (World) -> World =
+    { w0: World ->
+        val w1 = printString("What's your name?")(w0)
+        val (name, w2) = readName(w1)
+        printString("Hello $name! \n")(w2)
+    }
+
+fun askNameAndPrintGreetingsT(): WorldT<Unit> =
+    printStringT("What's your name? ") myOp { _ ->
+        readNameT myOp { name ->
+            printStringT("Hello $name! \n")
+        }
+    }
+
+fun main() {
+    //readName(World) pipe ::println
+    //printString("hello \n")(World) pipe ::println
+    //askNameAndPrintGreetings()(World) pipe ::println
+    askNameAndPrintGreetingsT()(World) pipe ::println
+}
+
+//fun main() {
+//    print("What's your name?")
+//    val name = Scanner(System.`in`).nextLine()
+//    println("Hello $name\n")
+//
+//}

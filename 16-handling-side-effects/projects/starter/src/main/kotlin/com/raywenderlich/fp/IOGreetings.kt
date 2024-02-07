@@ -29,3 +29,22 @@
  */
 
 package com.raywenderlich.fp
+
+import com.raywenderlich.fp.lib.compose
+
+val readNameM: IO<String> = IO(readNameT)
+
+val printStringM: (String) -> IO<Unit> =
+    printStringT compose ::IO
+
+fun <T> IO<T>.bind(): T = this(World).first
+
+fun askNameAndPrintGreetingsIO() : () -> Unit = {
+    printStringM("What's your name? ").bind()
+    val name = readNameM.bind()
+    printStringM("Hello $name! \n").bind()
+}
+
+fun main() {
+    askNameAndPrintGreetingsIO().invoke()
+}

@@ -29,3 +29,23 @@
  */
 
 package com.raywenderlich.fp
+
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
+import java.util.*
+
+suspend fun readStringCo(): String =
+    Scanner(System.`in`).nextLine()
+
+suspend fun printStringCo(str: String) =
+    print(str)
+
+@DelicateCoroutinesApi
+fun main() {
+    runBlocking {
+        printStringCo("What's your name?")
+        val name = async { readStringCo()}.await()
+        printStringCo("Hello $name! \n")
+    }
+}
