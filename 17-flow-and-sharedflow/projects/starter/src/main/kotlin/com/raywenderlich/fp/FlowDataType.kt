@@ -28,3 +28,62 @@
  *
  */
 package com.raywenderlich.fp
+
+import com.raywenderlich.fp.model.User
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
+
+fun inputStringFlow(question: String = "") = flow {
+    val scanner = java.util.Scanner(System.`in`)
+    print(question)
+    while (scanner.hasNextLine()) {
+        val line = scanner.nextLine()
+        if (line.isNullOrEmpty()) {
+            break
+        }
+        emit(line)
+        print(question)
+    }
+    scanner.close()
+}
+
+fun <A, B> Flow<A>.ap(fn: Flow<(A) -> B>): Flow<B> = flow {
+    collect { a ->
+        fn.collect { f ->
+            emit(f(a))
+        }
+    }
+}
+
+infix fun <A, B> Flow<(A) -> B>.appl(
+    a: Flow<A>
+) = a.ap(this)
+
+fun main() {
+/*    val strLengthFlow = inputStringFlow("Insert a word: ")
+        .map { str ->
+            str to str.length
+        }
+    runBlocking {
+        strLengthFlow.collect { strInfo ->
+            println("${strInfo.first} has length ${strInfo.second}")
+        }
+    }*/
+    val userBuilder = { id: Int ->
+        { name: String ->
+            { email: String -> User(id, name, email) }
+        }
+    }
+
+    val userBuilderFlow= flowOf(userBuilder)
+    val idFlow = listOf(10, 20, 30).asFlow()
+    val nameFlow = listOf("Pipo", "Pippo2", "Pippo3").asFlow()
+    val emailFlow = listOf(
+        "pippo@pippo.com", "pippo2@pippo.com", "pippo3@pippo.com",
+    ).asFlow()
+   val userFlow =
+       userBuilderFlow appl idFlow appl nameFlow appl emailFlow
+    runBlocking {
+        userFlow.collect(::println)
+    }
+}

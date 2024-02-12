@@ -29,3 +29,51 @@
  */
 
 package com.raywenderlich.fp
+
+import com.raywenderlich.fp.lib.curry
+import com.raywenderlich.fp.lib.double
+import com.raywenderlich.fp.lib.filterOdd
+import com.raywenderlich.fp.lib.logged
+
+fun <A, B> Sequence<A>.ap(
+    fn: Sequence<(A) -> B>
+): Sequence<B> = sequence {
+    val iterator = iterator()
+    while (iterator.hasNext()) {
+        val fnIterator = fn.iterator()
+        val item = iterator.next()
+        while (fnIterator.hasNext()) {
+            yield(fnIterator.next().invoke(item))
+        }
+    }
+}
+
+infix fun <A, B> Sequence<(A) -> B>.appl(a: Sequence<A>) =
+    a.ap(this)
+
+fun main() {
+    /*sequenceOf(1, 2, 3, 4, 5)
+        .filter(filterOdd.logged("filterOdd"))
+        .map(double.logged("double"))
+        .count()*/
+
+    /*    data class User(
+        val id: Int,
+        val name: String,
+        val email: String
+    )
+
+    val userBuilder = ::User.curry()
+    val userBuilderSeq = sequenceOf(userBuilder)
+    val idSec = sequenceOf(10, 20, 30)
+    val nameSeq = sequenceOf("Minnie", "Donald", "Mickey")
+    val emailSeq = sequenceOf("aaaaaaaaa@aaaaaa.com", "bbbbbbbbbb@bbbbbb.com")
+    val userSeq =
+        userBuilderSeq appl idSec appl nameSeq appl emailSeq
+
+    userSeq.forEach(::println)
+*/
+    val seqTo = { n: Int -> (1..n).toList().asSequence()}
+    val seqOfSeq = sequenceOf(1, 2, 3, 4, 5).flatMap(seqTo)
+    seqOfSeq.forEach { println("$it") }
+}

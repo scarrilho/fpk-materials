@@ -29,3 +29,97 @@
  */
 
 package com.raywenderlich.fp
+
+import com.raywenderlich.fp.model.ScoredShow
+import com.raywenderlich.fp.tools.fetchers.TvShowFetcher
+import com.raywenderlich.fp.tools.parser.TvShowParser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import java.io.IOException
+import javax.management.Query
+import kotlin.coroutines.CoroutineContext
+
+suspend fun fetchTvShowResult(
+    ctx: CoroutineContext,
+    query: String
+): Result<String> =
+    withContext(ctx) {
+        try {
+            Result.success(TvShowFetcher.fetch(query))
+        } catch (ioe: IOException) {
+            Result.failure(ioe)
+        }
+    }
+
+suspend fun parseTvShowResult(
+    ctx: CoroutineContext,
+    json: String
+): Result<List<ScoredShow>> =
+    withContext(ctx) {
+        try {
+            Result.success(TvShowParser.parse(json))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+val fetchSuspend: (String) -> SuspendableState<
+        CoroutineContext, Result<String>> = { query ->
+            SuspendableState { ctx: CoroutineContext ->
+                ctx to fetchTvShowResult(ctx, query)
+            }
+        }
+
+val parseSuspend: (String) -> SuspendableState<
+        CoroutineContext, Result<List<ScoredShow>>> = { json ->
+            SuspendableState { ctx: CoroutineContext ->
+                ctx to parseTvShowResult(ctx, json)
+            }
+        }
+
+val fetchSuspendResult: (String) -> SuspendableStateResult<
+        CoroutineContext, String> = { query ->
+            SuspendableStateResult { ctx: CoroutineContext ->
+                ctx to fetchTvShowResult(ctx, query)
+            }
+        }
+
+val parseSuspendResult: (String) -> SuspendableStateResult<
+        CoroutineContext, List<ScoredShow>> = { json ->
+            SuspendableStateResult {ctx: CoroutineContext ->
+                ctx to parseTvShowResult(ctx, json)
+            }
+        }
+
+@OptIn(FlowPreview::class)
+suspend fun searchTvShow(ctx: CoroutineContext) =
+    withContext(ctx) {
+        inputStringFlow("Search your Show: ")
+            .flatMapConcat { query ->
+                fetchSuspendResult(query)
+                    .flatMap(parseSuspendResult).sst(ctx)
+                    .second.fold(
+                        onSuccess = { it.asFlow()},
+                        onFailure = { emptyFlow() }
+                    )
+            }
+    }
+
+@OptIn(FlowPreview::class)
+fun main() {
+    runBlocking {
+        searchTvShow(Dispatchers.IO)
+            .collect {
+                println("Score: ${it.score} " +
+                "Name: ${it.show.name}" +
+                "Genres: ${it.show.genres}")
+                println(it.show.summary)
+                println("----------------------")
+            }
+    }
+}

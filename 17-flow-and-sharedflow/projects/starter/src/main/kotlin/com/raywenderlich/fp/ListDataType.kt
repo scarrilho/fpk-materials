@@ -29,3 +29,13 @@
  */
 
 package com.raywenderlich.fp
+
+import com.raywenderlich.fp.lib.double
+import com.raywenderlich.fp.lib.filterOdd
+import com.raywenderlich.fp.lib.logged
+
+fun main() {
+    listOf(1, 2, 3, 4, 5)
+        .filter(filterOdd.logged("filterOdd"))
+        .map(double.logged("double"))
+}

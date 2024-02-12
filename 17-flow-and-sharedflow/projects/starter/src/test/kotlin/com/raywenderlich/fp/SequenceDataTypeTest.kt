@@ -35,5 +35,35 @@ import com.raywenderlich.fp.lib.*
 import org.junit.Test
 
 class SequenceDataTypeTest {
+    @Test
+    fun `Identity Functor Law for Sequences`() {
+        val intToStringFunGenerator =
+            funGenerator<Int, String>(StringGenerator(5))
+        val i = {s: String -> s }
+        100.times {
+            val f = intToStringFunGenerator.one()
+            val seq = IntGenerator.generate(5).asSequence()
+            val list1 = seq.map(f compose i).toList()
+            val list2 = seq.map(f).toList()
+            Truth.assertThat(list1).isEqualTo(list2)
+        }
+    }
+
+    @Test
+    fun `composition Functor Lay for Sequences`() {
+        val intToStringGenerator = funGenerator<Int, String>(StringGenerator(5))
+        val stringToLongFunGenerator =
+            funGenerator<String, Long>(LongGenerator)
+
+        100.times {
+            val f = intToStringGenerator.one()
+            val g = stringToLongFunGenerator.one()
+            val seq = IntGenerator.generate(5).asSequence()
+            val list1 = seq.map(f compose g).toList()
+            val list2 = seq.map(f).map(g).toList()
+            Truth.assertThat(list1).isEqualTo(list2)
+        }
+    }
+
 
 }
