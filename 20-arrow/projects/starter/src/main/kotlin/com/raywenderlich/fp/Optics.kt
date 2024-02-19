@@ -29,3 +29,42 @@
  */
 
 package com.raywenderlich.fp
+
+import arrow.optics.Optional
+import com.raywenderlich.fp.lib.pipe
+import com.raywenderlich.fp.model.*
+
+val bigBangTheory = ScoredShow(
+    score = 0.09096895,
+    Show(
+        id = 66,
+        name = "The Big Bang Theory",
+        genres = listOf("Comedy"),
+        url = "https://www.tvmaze.com/shows/66/the-big-bang-theory",
+        image = ShowImage(
+            original = "",
+            medium = "https://static.tvmaze.com/uploads/images/medium_portrait/173/433868.jpg"),
+        summary = "<p><b>The Big Bang Theory</b> is a comedy about brilliant physicists, Leonard and Sheldon...</p>",
+        language = "English"
+    )
+)
+
+val updatedBigBangTheory = bigBangTheory.copy(
+    show = bigBangTheory.show.copy(
+        image = bigBangTheory.show.image?.copy(
+            "https://static.tvmaze.com/uploads/images/medium_portrait/173/433868.jpg"
+        )
+    )
+)
+
+fun main() {
+    bigBangTheory pipe ::println
+    updatedBigBangTheory pipe ::println
+
+    val updateOriginalImageLens: Optional<ScoredShow, String> =
+        ScoredShow.show.image.original
+    val updatedShow = updateOriginalImageLens.modify(bigBangTheory) {
+        "https://static.tvmaze.com/uploads/images/medium_portrait/173/433868.jpg"
+    }
+    updatedShow pipe ::println
+}

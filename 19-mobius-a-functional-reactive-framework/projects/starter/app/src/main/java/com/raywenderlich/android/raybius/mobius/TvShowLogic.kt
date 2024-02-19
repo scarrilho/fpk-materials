@@ -66,6 +66,18 @@ val tvShowLogic: TvShowUpdate = object : TvShowUpdate {
           )
         )
       )
+      is ItemClicked -> Next.next(
+        model, setOf(NavigateToDetail(event.id))
+      )
+      is DetailViewResumed -> Next.next(
+        model.copy(loading = true), setOf(GetTvShowDetail(event.id))
+      )
+      is TvShowDetailSuccess -> Next.next(
+        model.copy(loading = false, detailResult = event.results)
+      )
+      is TvShowDetailFailure -> Next.next(
+        model.copy(loading = false), setOf(DisplayErrorMessage(event.ex))
+      )
       else -> Next.noChange()
     }
 }

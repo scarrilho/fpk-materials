@@ -34,6 +34,7 @@
 
 package com.raywenderlich.android.raybius.mobius.handlers
 
+import com.raywenderlich.android.raybius.mobius.GetTvShowDetail
 import com.raywenderlich.android.raybius.mobius.SearchTvShow
 import com.raywenderlich.android.raybius.mobius.TvShowEvent
 import io.reactivex.Observable
@@ -42,6 +43,10 @@ interface ApiRequestHandler {
 
   fun handleSearchTvShow(
     request: Observable<SearchTvShow>
+  ): Observable<TvShowEvent>
+
+  fun handleTvShowDetail(
+    request: Observable<GetTvShowDetail>
   ): Observable<TvShowEvent>
 }
 

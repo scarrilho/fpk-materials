@@ -29,3 +29,47 @@
  */
 
 package com.raywenderlich.fp
+
+import arrow.core.Option
+import arrow.core.getOrElse
+import arrow.core.none
+import arrow.core.some
+import com.raywenderlich.fp.model.ScoredShow
+import com.raywenderlich.fp.tools.fetchers.TvShowFetcher
+import com.raywenderlich.fp.tools.parser.TvShowParser
+import java.io.IOException
+
+fun fetchOption(query: String): Option<String> = try {
+    TvShowFetcher.fetch(query).some()
+} catch (ioe: IOException) {
+    none()
+}
+
+fun parseOption(json: String): Option<List<ScoredShow>> = try {
+    TvShowParser.parse(json).some()
+} catch (e: Throwable) {
+    none()
+}
+
+fun fetchAndParseOption(
+    query: String
+): Option<List<ScoredShow>> =
+    fetchOption(query).flatMap(::parseOption)
+
+fun main() {
+    val searchResultOption = fetchAndParseOption("Big Bang")
+    if (searchResultOption.isDefined()) {
+        val searchResult = searchResultOption.getOrElse { emptyList() }
+        if (searchResult.isNotEmpty()) {
+            searchResult.forEach{
+                with(it.show) {
+                    println("Name: $name Genre: ${genres.joinToString()}")
+                }
+            }
+        } else {
+            println("No results")
+        }
+    } else {
+        println("something went wrong!!")
+    }
+}

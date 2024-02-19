@@ -29,3 +29,61 @@
  */
 
 package com.raywenderlich.fp
+
+import arrow.core.Either
+import arrow.core.computations.either
+import arrow.core.flatMap
+import arrow.core.left
+import arrow.core.right
+import com.raywenderlich.fp.model.ScoredShow
+import com.raywenderlich.fp.tools.fetchers.TvShowFetcher
+import com.raywenderlich.fp.tools.parser.TvShowParser
+import kotlinx.coroutines.runBlocking
+import java.io.IOException
+
+fun fetchEither(
+    query: String
+): Either<IOException, String> = try {
+    TvShowFetcher.fetch(query).right()
+} catch (ioe: IOException) {
+    ioe.left()
+}
+
+fun parseEither(
+    json: String
+): Either<Throwable, List<ScoredShow>> = try {
+    TvShowParser.parse(json /* + "break" */).right()
+} catch (e: Throwable) {
+    e.left()
+}
+
+fun fetchAndParseEither(
+    query: String
+): Either<Throwable, List<ScoredShow>> =
+    fetchEither(query)
+        .flatMap(::parseEither)
+
+suspend fun fetchAndParseEitherComprehension(
+    query: String
+): Either<Throwable, List<ScoredShow>> =
+    either {
+        val json = fetchEither(query).bind()
+        val result = parseEither(json).bind()
+        result
+    }
+
+fun main() {
+    fetchAndParseEither("Big Bang")
+        .fold(
+            ifRight = ::printScoresShow,
+            ifLeft = ::printException
+        )
+
+    runBlocking {
+        fetchAndParseEitherComprehension("Big Bang")
+            .fold(
+                ifRight = ::printScoresShow,
+                ifLeft = ::printException
+            )
+    }
+}

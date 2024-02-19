@@ -49,6 +49,9 @@ fun FragmentDetailBinding.logic(model: TvShowModel) {
   } else {
     hideLoading()
   }
+  if (model.detailResult != null) {
+    displayResult(model.detailResult)
+  }
 }
 
 fun FragmentDetailBinding.displayResult(detail: ShowDetail) {

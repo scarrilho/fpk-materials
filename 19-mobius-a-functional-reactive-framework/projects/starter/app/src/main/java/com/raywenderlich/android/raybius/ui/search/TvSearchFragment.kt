@@ -41,6 +41,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.raywenderlich.android.raybius.MainActivity
 import com.raywenderlich.android.raybius.databinding.FragmentSearchBinding
+import com.raywenderlich.android.raybius.mobius.ItemClicked
 import com.raywenderlich.android.raybius.mobius.TvShowEvent
 import com.raywenderlich.android.raybius.mobius.TvShowModel
 import com.raywenderlich.android.raybius.ui.MobiusHost
@@ -59,6 +60,7 @@ class TvSearchFragment : Fragment() {
   ): View {
     searchBinding = FragmentSearchBinding.inflate(LayoutInflater.from(context))
     searchBinding.initUI(eventConsumer) { showId ->
+      eventConsumer.accept(ItemClicked(showId))
     }
     return searchBinding.root
   }

@@ -35,11 +35,14 @@
 package com.raywenderlich.android.raybius.mobius
 
 import com.raywenderlich.fp.model.ScoredShow
+import com.raywenderlich.fp.model.ShowDetail
 
 data class TvShowModel(
   val searchEnabled: Boolean = false,
   val inputText: String = "",
   val loading: Boolean = false,
   val searchResults: List<ScoredShow> = emptyList(),
-  val error: Boolean = false
+  val error: Boolean = false,
+  val detailResult: ShowDetail?= null
 )
+

@@ -38,3 +38,6 @@ sealed interface TvShowEffect
 data class SearchTvShow(val query: String) : TvShowEffect
 data class DisplayErrorMessage(val error: Throwable) : TvShowEffect
 object HideKeyboard : TvShowEffect
+
+data class NavigateToDetail(val showId: Int) : TvShowEffect
+data class GetTvShowDetail(val showId: Int) : TvShowEffect

@@ -36,10 +36,17 @@ package com.raywenderlich.android.raybius.mobius.handlers
 
 import com.raywenderlich.android.raybius.mobius.DisplayErrorMessage
 import com.raywenderlich.android.raybius.mobius.HideKeyboard
+import com.raywenderlich.android.raybius.mobius.NavigateToDetail
+import com.raywenderlich.android.raybius.mobius.TvShowEvent
+import io.reactivex.Observable
 
 interface UIEffectHandler {
 
   fun handleErrorMessage(effect: DisplayErrorMessage)
 
   fun handleHideKeyboardMessage(effect: HideKeyboard)
+
+  fun handleNavigateToDetail(
+    request: Observable<NavigateToDetail>
+  ): Observable<TvShowEvent>
 }

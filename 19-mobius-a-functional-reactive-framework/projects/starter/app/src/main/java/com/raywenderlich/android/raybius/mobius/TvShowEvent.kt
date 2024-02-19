@@ -35,9 +35,15 @@
 package com.raywenderlich.android.raybius.mobius
 
 import com.raywenderlich.fp.model.ScoredShow
+import com.raywenderlich.fp.model.ShowDetail
 
 sealed class TvShowEvent
 data class InputTextChanged(val text: String) : TvShowEvent()
 object SearchButtonClicked : TvShowEvent()
 data class TvSearchSuccess(val results: List<ScoredShow>) : TvShowEvent()
 data class TvSearchFailure(val ex: Throwable) : TvShowEvent()
+
+data class DetailViewResumed(val id: Int) : TvShowEvent()
+data class ItemClicked(val id: Int) : TvShowEvent()
+data class TvShowDetailSuccess(val results: ShowDetail) : TvShowEvent()
+data class TvShowDetailFailure(val ex: Throwable) : TvShowEvent()

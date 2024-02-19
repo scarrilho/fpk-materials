@@ -107,5 +107,13 @@ class MobiusModule {
         HideKeyboard::class.java, uiHandler::handleHideKeyboardMessage,
         AndroidSchedulers.mainThread()
       )
+      .addTransformer(
+        GetTvShowDetail::class.java,
+        apiRequestHandler::handleTvShowDetail
+      )
+      .addTransformer(
+        NavigateToDetail::class.java,
+        uiHandler::handleNavigateToDetail
+      )
       .build();
 }

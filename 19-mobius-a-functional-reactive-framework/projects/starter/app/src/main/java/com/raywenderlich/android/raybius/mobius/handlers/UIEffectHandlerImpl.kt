@@ -35,14 +35,22 @@
 package com.raywenderlich.android.raybius.mobius.handlers
 
 import android.app.Activity
+import android.app.AppComponentFactory
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.raywenderlich.android.raybius.R
+import com.raywenderlich.android.raybius.mobius.DetailViewResumed
 import com.raywenderlich.android.raybius.mobius.DisplayErrorMessage
 import com.raywenderlich.android.raybius.mobius.HideKeyboard
+import com.raywenderlich.android.raybius.mobius.NavigateToDetail
+import com.raywenderlich.android.raybius.mobius.TvShowEvent
+import com.raywenderlich.android.raybius.ui.detail.TvShowDetailFragment
 import dagger.hilt.android.qualifiers.ActivityContext
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 internal const val SHOW_ID_EXTRA = "showId"
@@ -64,4 +72,17 @@ class UIEffectHandlerImpl @Inject constructor(
     val view: View = activityContext.getCurrentFocus() ?: View(asActivity)
     imm.hideSoftInputFromWindow(view.getWindowToken(), 0)
   }
+
+  override fun handleNavigateToDetail(request: Observable<NavigateToDetail>): Observable<TvShowEvent> =
+    request
+      .observeOn(AndroidSchedulers.mainThread())
+      .map { request ->
+        val activity = activityContext as AppCompatActivity
+        activity.supportFragmentManager.beginTransaction()
+          .replace(R.id.anchor, TvShowDetailFragment())
+          .addToBackStack("Detail")
+          .commit()
+
+        DetailViewResumed(request.showId)
+      }
 }

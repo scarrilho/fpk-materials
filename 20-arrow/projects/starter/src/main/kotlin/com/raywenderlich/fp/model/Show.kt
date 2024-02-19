@@ -30,14 +30,19 @@
 
 package com.raywenderlich.fp.model
 
+import arrow.optics.optics
 import kotlinx.serialization.Serializable
 
+@optics
 @Serializable
 data class ScoredShow(
   val score: Double,
   val show: Show
-)
+) {
+  companion object
+}
 
+@optics
 @Serializable
 data class Show(
   val id: Int,
@@ -47,10 +52,15 @@ data class Show(
   val image: ShowImage?,
   val summary: String?,
   val language: String
-)
+) {
+  companion object
+}
 
+@optics
 @Serializable
 data class ShowImage(
   val original: String,
   val medium: String
-)
+) {
+  companion object
+}

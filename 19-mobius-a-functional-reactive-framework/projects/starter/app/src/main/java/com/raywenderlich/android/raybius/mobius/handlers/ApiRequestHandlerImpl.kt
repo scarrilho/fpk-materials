@@ -34,10 +34,14 @@
 
 package com.raywenderlich.android.raybius.mobius.handlers
 
+import com.raywenderlich.android.raybius.api.fetchAndParseTvShowDetailResult
 import com.raywenderlich.android.raybius.api.fetchAndParseTvShowResult
+import com.raywenderlich.android.raybius.mobius.GetTvShowDetail
 import com.raywenderlich.android.raybius.mobius.SearchTvShow
 import com.raywenderlich.android.raybius.mobius.TvSearchFailure
 import com.raywenderlich.android.raybius.mobius.TvSearchSuccess
+import com.raywenderlich.android.raybius.mobius.TvShowDetailSuccess
+import com.raywenderlich.android.raybius.mobius.TvShowDetailFailure
 import com.raywenderlich.android.raybius.mobius.TvShowEvent
 import com.raywenderlich.fp.model.ScoredShow
 import io.reactivex.Observable
@@ -50,6 +54,15 @@ class ApiRequestHandlerImpl @Inject constructor() : ApiRequestHandler {
         fetchAndParseTvShowResult(request.query).fold(
           onSuccess = { Observable.just(TvSearchSuccess(it.filter(removeIncompleteFilter))) },
           onFailure = { Observable.just(TvSearchFailure(it)) }
+        )
+      }
+
+  override fun handleTvShowDetail(request: Observable<GetTvShowDetail>): Observable<TvShowEvent> =
+    request
+      .flatMap { request ->
+        fetchAndParseTvShowDetailResult(request.showId).fold(
+          onSuccess = { Observable.just(TvShowDetailSuccess(it))},
+          onFailure = {Observable.just(TvShowDetailFailure(it))}
         )
       }
 

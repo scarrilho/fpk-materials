@@ -29,3 +29,60 @@
  */
 
 package com.raywenderlich.fp
+
+import arrow.core.computations.nullable
+import com.raywenderlich.fp.model.ScoredShow
+import com.raywenderlich.fp.tools.fetchers.TvShowFetcher
+import com.raywenderlich.fp.tools.parser.TvShowParser
+import kotlinx.coroutines.runBlocking
+import java.io.IOException
+import com.raywenderlich.fp.lib.flatMap as nullableFlatMap
+
+fun fetchNullable(query: String): String? = try {
+    TvShowFetcher.fetch(query)
+} catch (ioe: IOException) {
+    null
+}
+
+fun parseNullable(json: String) : List<ScoredShow>? = try {
+    TvShowParser.parse(json)
+} catch (e: Throwable) {
+    null
+}
+
+fun fetchAndParseNullableFlatMap(query: String) =
+    fetchNullable(query)
+        .nullableFlatMap(::parseNullable)
+
+suspend fun fetchAndParseNullable(
+    query: String
+): List<ScoredShow>? = nullable {
+    val json = fetchNullable("Big Bang").bind()
+    val result = parseNullable(json).bind()
+    result
+}
+
+suspend fun mainWithComprehension() {
+    val searchResultOption = fetchAndParseNullable("Big Bang")
+    if (searchResultOption != null) {
+        printScoresShow(searchResultOption)
+    } else {
+        println("Something went wrong!")
+    }
+}
+
+fun mainWithFlatMap() {
+    val searchResultOption = fetchAndParseNullableFlatMap("Big Bang")
+    if (searchResultOption != null) {
+        printScoresShow(searchResultOption)
+    } else {
+        println("Something went wrong!")
+    }
+}
+
+fun main() {
+    mainWithFlatMap()
+    runBlocking {
+        mainWithComprehension()
+    }
+}

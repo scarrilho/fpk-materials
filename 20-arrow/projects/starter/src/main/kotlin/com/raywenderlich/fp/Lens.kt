@@ -29,3 +29,38 @@
  */
 
 package com.raywenderlich.fp
+
+import arrow.optics.Lens
+import com.raywenderlich.fp.lib.pipe
+import com.raywenderlich.fp.model.ScoredShow
+import com.raywenderlich.fp.model.Show
+import com.raywenderlich.fp.model.genres
+import com.raywenderlich.fp.model.show
+
+val addGenreLens: Lens<ScoredShow, List<String>> = Lens(
+    get = { scoredShow -> scoredShow.show.genres},
+    set = { scoredShow, newGenres ->
+        ScoredShow.show.genres.modify(scoredShow) {
+        scoredShow.show.genres + newGenres
+    }
+    }
+)
+
+val showLens: Lens<ScoredShow, Show> = Lens(
+    get = {scoredShow -> scoredShow.show },
+    set = { scoredShow, newShow -> scoredShow.copy(show = newShow)}
+)
+
+val nameLens: Lens<Show, String> = Lens(
+    get = { show -> show.name },
+    set = { show, newName -> show.copy(name = newName)}
+)
+
+fun main() {
+    addGenreLens.set(
+        bigBangTheory, listOf("Science", "Comic")
+    ) pipe ::println
+
+    val updateName = showLens compose nameLens
+    updateName.modify(bigBangTheory, String::toUpperCase) pipe ::println
+}
